@@ -1,9 +1,11 @@
 weather/Root.class
 weather/Properties.class
 weather/Geometry.class
+PointsResponse.class
 MyWeatherAPI.class
 weather/Period.class
 weather/Elevation.class
 weather/WeatherAPI.class
+GridInfo.class
 JavaFX.class
 weather/ProbabilityOfPrecipitation.class
