@@ -45,7 +45,9 @@ import javafx.scene.image.Image;
 
 
 public class JavaFX extends Application {
-	TextField temperature,weather;
+	Text txt1, temperature, weather;
+	Text txt2, txt3, temperature2, temperature3;
+	Text weather2, weather3;
 
 
 	public static void main(String[] args) {
@@ -85,11 +87,106 @@ public class JavaFX extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
-		// Mohammad's Code
+		Button returnButton2 = new Button("Return");
+		Button exitButton2 = new Button("Exit");
+		HBox bottomButtons2 = new HBox(20,returnButton2,exitButton2);
+
+		primaryStage.setTitle("Daily Weather");
 
 
-		//
+		/// Mohammed Kamil Code: Daily Weather //
 
+
+		ArrayList<Period> forecast = WeatherAPI.getForecast("LOT",77,70);
+		if (forecast == null){
+			throw new RuntimeException("Forecast did not load");
+		}
+
+		// The function call for current day information //
+		VBox currentDay = startDisplay(forecast);
+
+
+//		Button button = new Button("Hover Me");
+
+//		// Default button style
+//		button.setStyle("-fx-background-color: #3498db; -fx-text-fill: white;");
+//
+//		// Hover transition
+//		FadeTransition fadeIn = new FadeTransition(Duration.millis(300), button);
+//		fadeIn.setFromValue(1.0);
+//		fadeIn.setToValue(0.8);
+//
+//		FadeTransition fadeOut = new FadeTransition(Duration.millis(300), button);
+//		fadeOut.setFromValue(0.8);
+//		fadeOut.setToValue(1.0);
+//
+//		button.setOnMouseEntered(e -> {
+//			button.setStyle("-fx-background-color: #2980b9; -fx-text-fill: white;");
+//			fadeIn.playFromStart();
+//		});
+//
+//		button.setOnMouseExited(e -> {
+//			button.setStyle("-fx-background-color: #3498db; -fx-text-fill: white;");
+//			fadeOut.playFromStart();
+//		});
+
+
+		//////////
+		txt1 = new Text("Today");
+		temperature = new Text(forecast.getFirst().temperature + "°");
+		weather = new Text("Wind speed: " + forecast.getFirst().windSpeed +
+				"\n Wind direction: " + forecast.getFirst().windDirection);
+		VBox vbox1 = new VBox(7,txt1,temperature,weather);
+		vbox1.setAlignment(Pos.CENTER);
+
+		Button button = new Button();
+		button.setGraphic(vbox1);
+
+
+		txt2 = new Text("Tomorrow");
+		txt2.setTextAlignment(TextAlignment.CENTER);
+		temperature2 = new Text(forecast.get(1).temperature + "°");
+		weather2 = new Text("Wind speed: " + forecast.get(1).windSpeed +
+				"\n Wind direction: " + forecast.get(1).windDirection);
+		VBox vbox2 = new VBox(7,txt2,temperature2,weather2);
+		vbox2.setAlignment(Pos.CENTER);
+
+		Button button2 = new Button();
+		button2.setGraphic(vbox2);
+
+
+
+		txt3 = new Text("After Tomorrow");
+		txt3.setTextAlignment(TextAlignment.CENTER);
+		temperature3 = new Text(forecast.get(2).temperature + "°");
+		weather3 = new Text("Wind speed: " + forecast.get(2).windSpeed +
+				"\n Wind direction: " + forecast.get(2).windDirection);
+		VBox vbox3 = new VBox(7,txt3,temperature3, weather3);
+		vbox3.setAlignment(Pos.CENTER);
+
+		Button button3 = new Button();
+		button3.setGraphic(vbox3);
+
+
+
+
+		HBox unite = new HBox(20, button,button2,button3);
+		unite.setAlignment(Pos.BOTTOM_CENTER);
+
+		HBox bottomButtons3 = new HBox(20,returnButton2,exitButton2);
+		bottomButtons3.setAlignment(Pos.BOTTOM_CENTER);
+
+		VBox vbox4 = new VBox(20,currentDay, unite, bottomButtons3);
+
+		Scene scene = new Scene(vbox4, 600,780);
+
+
+
+
+
+
+
+		//////////////// END OF Mohammed Kamil Code ////////////////
 
 
 		Button returnButton2=new Button("Return");
