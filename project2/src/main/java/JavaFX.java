@@ -19,6 +19,30 @@ import java.io.File;
 import java.util.ArrayList;
 import javafx.scene.image.Image;
 
+import javafx.application.Application;
+
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
+import javafx.stage.Stage;
+import weather.Period;
+import weather.WeatherAPI;
+
+import java.io.File;
+import java.util.ArrayList;
+import javafx.scene.image.Image;
+
+
 
 public class JavaFX extends Application {
 	TextField temperature,weather;
@@ -32,6 +56,13 @@ public class JavaFX extends Application {
 	//feel free to remove the starter code from this method
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+
+		// Mohammad's Code
+
+
+		//
+
+
 
 		Button returnButton2=new Button("Return");
 		Button exitButton2=new Button("Exit");
