@@ -98,6 +98,20 @@ public class JavaFX extends Application {
 		return button;
 	}
 
+	public Button secondtBox(ArrayList<Period> forecast){
+		txt2 = new Text("Tomorrow");
+		txt2.setTextAlignment(TextAlignment.CENTER);
+		temperature2 = new Text(forecast.get(1).temperature + "°");
+		weather2 = new Text("Wind speed: " + forecast.get(1).windSpeed +
+				"\n Wind direction: " + forecast.get(1).windDirection);
+		VBox vbox2 = new VBox(7,txt2,temperature2,weather2);
+		vbox2.setAlignment(Pos.CENTER);
+
+		Button button2 = new Button();
+		button2.setGraphic(vbox2);
+		return button2;
+	}
+
 
 // End of Mohammad's Functions //
 
@@ -153,18 +167,10 @@ public class JavaFX extends Application {
 		//////////
 
 		Button firstDay = firstBox(forecast);
+		Button secondDay = secondtBox(forecast);
 
 
-		txt2 = new Text("Tomorrow");
-		txt2.setTextAlignment(TextAlignment.CENTER);
-		temperature2 = new Text(forecast.get(1).temperature + "°");
-		weather2 = new Text("Wind speed: " + forecast.get(1).windSpeed +
-				"\n Wind direction: " + forecast.get(1).windDirection);
-		VBox vbox2 = new VBox(7,txt2,temperature2,weather2);
-		vbox2.setAlignment(Pos.CENTER);
 
-		Button button2 = new Button();
-		button2.setGraphic(vbox2);
 
 
 
@@ -182,7 +188,7 @@ public class JavaFX extends Application {
 
 
 
-		HBox unite = new HBox(20, firstDay ,button2,button3);
+		HBox unite = new HBox(20, firstDay ,secondDay ,button3);
 		unite.setAlignment(Pos.BOTTOM_CENTER);
 
 		HBox bottomButtons3 = new HBox(20,returnButton2,exitButton2);
