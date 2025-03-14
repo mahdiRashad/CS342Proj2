@@ -98,7 +98,7 @@ public class JavaFX extends Application {
 		return button;
 	}
 
-	public Button secondtBox(ArrayList<Period> forecast){
+	public Button secondBox(ArrayList<Period> forecast){
 		txt2 = new Text("Tomorrow");
 		txt2.setTextAlignment(TextAlignment.CENTER);
 		temperature2 = new Text(forecast.get(1).temperature + "°");
@@ -112,6 +112,22 @@ public class JavaFX extends Application {
 		return button2;
 	}
 
+
+
+	public Button thirdBox(ArrayList<Period> forecast){
+
+		txt3 = new Text("After Tomorrow");
+		txt3.setTextAlignment(TextAlignment.CENTER);
+		temperature3 = new Text(forecast.get(2).temperature + "°");
+		weather3 = new Text("Wind speed: " + forecast.get(2).windSpeed +
+				"\n Wind direction: " + forecast.get(2).windDirection);
+		VBox vbox3 = new VBox(7,txt3,temperature3, weather3);
+		vbox3.setAlignment(Pos.CENTER);
+
+		Button button3 = new Button();
+		button3.setGraphic(vbox3);
+		return button3;
+	}
 
 // End of Mohammad's Functions //
 
@@ -167,28 +183,12 @@ public class JavaFX extends Application {
 		//////////
 
 		Button firstDay = firstBox(forecast);
-		Button secondDay = secondtBox(forecast);
+		Button secondDay = secondBox(forecast);
+		Button thirdDay = thirdBox(forecast);
 
 
+		HBox unite = new HBox(20, firstDay ,secondDay ,thirdDay);
 
-
-
-
-		txt3 = new Text("After Tomorrow");
-		txt3.setTextAlignment(TextAlignment.CENTER);
-		temperature3 = new Text(forecast.get(2).temperature + "°");
-		weather3 = new Text("Wind speed: " + forecast.get(2).windSpeed +
-				"\n Wind direction: " + forecast.get(2).windDirection);
-		VBox vbox3 = new VBox(7,txt3,temperature3, weather3);
-		vbox3.setAlignment(Pos.CENTER);
-
-		Button button3 = new Button();
-		button3.setGraphic(vbox3);
-
-
-
-
-		HBox unite = new HBox(20, firstDay ,secondDay ,button3);
 		unite.setAlignment(Pos.BOTTOM_CENTER);
 
 		HBox bottomButtons3 = new HBox(20,returnButton2,exitButton2);
@@ -200,9 +200,11 @@ public class JavaFX extends Application {
 
 
 
-		//////////////// END OF Mohammed Kamil Code ////////////////
-		//////////////// Mahdi Yahya Code Starts Here ////////////////
+		//////////////// END OF Mohammed Kamil Code //////////////////
 
+		//////////////////////////////////////////////////////////////
+
+		//////////////// Mahdi Yahya Code Starts Here ////////////////
 
 		TextField latitudeField;
 		TextField longitudeField;
