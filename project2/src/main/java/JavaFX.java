@@ -87,6 +87,8 @@ public class JavaFX extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
+		ArrayList<Period> forecast = WeatherAPI.getForecast("LOT",77,70);
+
 		Button returnButton2 = new Button("Return");
 		Button exitButton2 = new Button("Exit");
 		HBox bottomButtons2 = new HBox(20,returnButton2,exitButton2);
@@ -97,7 +99,6 @@ public class JavaFX extends Application {
 		/// Mohammed Kamil Code: Daily Weather //
 
 
-		ArrayList<Period> forecast = WeatherAPI.getForecast("LOT",77,70);
 		if (forecast == null){
 			throw new RuntimeException("Forecast did not load");
 		}
@@ -182,16 +183,8 @@ public class JavaFX extends Application {
 
 
 
-
-
-
-
 		//////////////// END OF Mohammed Kamil Code ////////////////
 
-
-		Button returnButton2=new Button("Return");
-		Button exitButton2=new Button("Exit");
-		HBox bottomButtons2=new HBox(20,returnButton2,exitButton2);
 
 		TextField latitudeField;
 		TextField longitudeField;
@@ -232,16 +225,15 @@ public class JavaFX extends Application {
 
 		primaryStage.setTitle("Weather App");
 		//int temp = WeatherAPI.getTodaysTemperature(77,70);
-		ArrayList<Period> forecast = WeatherAPI.getForecast("LOT",77,70);
 		if (forecast == null){
 			throw new RuntimeException("Forecast did not load");
 		}
-		temperature = new TextField();
-		weather = new TextField();
-		temperature.setText("Today's weather is: "+String.valueOf(forecast.get(0).temperature));
-		weather.setText(forecast.get(0).shortForecast);
+		TextField temperatureLocation = new TextField();
+		TextField weatherLocation = new TextField();
+		temperatureLocation.setText("Today's weather is: "+String.valueOf(forecast.get(0).temperature));
+		weatherLocation.setText(forecast.get(0).shortForecast);
 
-		Scene scene = new Scene(new VBox(temperature,weather,bottomButtons2), 520,780);
+		Scene sceneLocation = new Scene(new VBox(temperatureLocation,weatherLocation,bottomButtons2), 520,780);
 
 
 
