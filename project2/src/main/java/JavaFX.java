@@ -201,6 +201,7 @@ public class JavaFX extends Application {
 
 
 		//////////////// END OF Mohammed Kamil Code ////////////////
+		//////////////// Mahdi Yahya Code Starts Here ////////////////
 
 
 		TextField latitudeField;
@@ -337,4 +338,4 @@ public class JavaFX extends Application {
 	}
 
 }
-//Mahdi Yahya
+			//////////////// END OF Mahdi Yahya Code ////////////////
