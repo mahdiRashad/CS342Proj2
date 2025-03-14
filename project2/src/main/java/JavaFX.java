@@ -53,6 +53,34 @@ public class JavaFX extends Application {
 		launch(args);
 	}
 
+
+	// Mohammad's Functions //
+
+	// The function that displays the current day weather information //
+
+	public VBox startDisplay(ArrayList<Period> forecast){
+		Text today = new Text("Current Temperature");
+		Text currentTemperature = new Text(forecast.getFirst().temperature + "°");
+		Text weatherCurrent = new Text("Wind speed: " + forecast.getFirst().windSpeed +
+				"\nWind direction: " + forecast.getFirst().windDirection);
+
+		ImageView iconr = new ImageView(new Image(new File("src/main/resources/rc.png").toURI().toString()));
+		iconr.setFitWidth(50);
+		iconr.setPreserveRatio(true);
+		Text precipitationProbability = new Text(forecast.getFirst().probabilityOfPrecipitation.value + "%");
+
+		VBox currentDay = new VBox(10, today, currentTemperature, weatherCurrent, iconr, precipitationProbability);
+		currentDay.setAlignment(Pos.CENTER);
+		currentDay.setMinHeight(300);
+		today.setFont(new Font("Bison", 20));
+		currentTemperature.setFont(new Font("Bison", 20));
+		weatherCurrent.setFont(new Font("Bison", 20));
+
+		return currentDay;
+	}
+
+// End of Mohammad's Functions //
+
 	//feel free to remove the starter code from this method
 	@Override
 	public void start(Stage primaryStage) throws Exception {
