@@ -4,9 +4,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -39,7 +37,44 @@ public class JavaFX extends Application {
 		Button exitButton2=new Button("Exit");
 		HBox bottomButtons2=new HBox(20,returnButton2,exitButton2);
 
-		primaryStage.setTitle("Daily Weather");
+		TextField latitudeField;
+		TextField longitudeField;
+		TextArea resultArea;
+		resultArea = new TextArea();
+		resultArea.setEditable(false);
+		resultArea.setWrapText(true);
+		Label latitudeLabel = new Label("Enter Latitude:");
+		latitudeField = new TextField();
+
+		Label longitudeLabel = new Label("Enter Longitude:");
+		longitudeField = new TextField();
+
+		Button fetchButton = new Button("Get Forecast");
+		fetchButton.setOnAction(e ->{
+
+			String latitude = latitudeField.getText();
+			String longitude = longitudeField.getText();
+
+			GridInfo gridInfo = MyWeatherAPI.getGridInfo(latitude, longitude);
+			if (gridInfo == null) {
+				System.out.println("Failed to retrieve grid information.");
+				return;
+			}
+			ArrayList<Period> forecastLocation = WeatherAPI.getForecast(gridInfo.gridId,gridInfo.gridX,gridInfo.gridY);
+			if (forecastLocation == null){
+				throw new RuntimeException("Forecast did not load");
+			}
+			resultArea.setText(forecastLocation.get(0).shortForecast + "Today's weather is: "+String.valueOf(forecastLocation.get(0).temperature));
+
+		});
+
+		VBox vbox = new VBox(10, latitudeLabel, latitudeField, longitudeLabel, longitudeField, fetchButton, resultArea);
+		vbox.setPadding(new Insets(15));
+
+		Scene otherLocation = new Scene( vbox, 520,780);
+
+
+		primaryStage.setTitle("Weather App");
 		//int temp = WeatherAPI.getTodaysTemperature(77,70);
 		ArrayList<Period> forecast = WeatherAPI.getForecast("LOT",77,70);
 		if (forecast == null){
@@ -70,16 +105,17 @@ public class JavaFX extends Application {
 		VBox textVBox =  new VBox(title,title1);
 		textVBox.setAlignment(Pos.TOP_CENTER);
 
-		Button roundButton = new Button("Daily Weather");
+		Button roundButton = new Button("Chicago");
 		roundButton.setFont(new Font("Bison", 28));
 		roundButton.setTextFill(Color.WHITE);
 		roundButton.setStyle("-fx-background-color: #008CBA; -fx-background-radius: 50; -fx-padding: 10 20;");
 		roundButton.setOnAction(e -> primaryStage.setScene(scene) );
 
-		Button roundButton1 = new Button("Location Based");
+		Button roundButton1 = new Button("Other Locations");
 		roundButton1.setFont(new Font("Bison", 28));
 		roundButton1.setTextFill(Color.WHITE);
 		roundButton1.setStyle("-fx-background-color: #008CBA; -fx-background-radius: 50; -fx-padding: 10 20;");
+		roundButton1.setOnAction(e -> {primaryStage.setScene(otherLocation);});
 
 		HBox buttons = new HBox(10,roundButton, roundButton1);
 		buttons.setAlignment(Pos.TOP_CENTER);
