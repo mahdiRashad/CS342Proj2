@@ -1,9 +1,7 @@
 import javafx.application.Application;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -14,34 +12,17 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import weather.Period;
 import weather.WeatherAPI;
-
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Locale;
+
 import javafx.scene.image.Image;
-
-import javafx.application.Application;
-
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import javafx.stage.Stage;
-import weather.Period;
-import weather.WeatherAPI;
-
-import java.io.File;
-import java.util.ArrayList;
-import javafx.scene.image.Image;
-
 
 
 public class JavaFX extends Application {
@@ -56,10 +37,10 @@ public class JavaFX extends Application {
 	}
 
 
-	// Mohammad's Functions //
+	// Mohammad's Functions, DO NOT TOUCH //
+
 
 	// The function that displays the current day weather information //
-
 	public VBox startDisplay(ArrayList<Period> forecast){
 		Text today = new Text("Current Temperature");
 		Text currentTemperature = new Text(forecast.getFirst().temperature + "°");
@@ -83,7 +64,8 @@ public class JavaFX extends Application {
 
 
 	// The first box function //
-
+	// This function shows the weather information of the first day //
+	// The box is clickable. It's a button.
 	public Button firstBox(ArrayList<Period> forecast){
 		txt1 = new Text("Today");
 		temperature = new Text(forecast.getFirst().temperature + "°");
@@ -98,8 +80,15 @@ public class JavaFX extends Application {
 		return button;
 	}
 
+	// The second box function //
+	// This function shows the weather information of the second day //
+	// The box is clickable. It's a button.
 	public Button secondBox(ArrayList<Period> forecast){
-		txt2 = new Text("Tomorrow");
+
+		SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.ENGLISH);
+		String dayOfWeek = dayFormat.format(forecast.get(1).endTime);
+
+		txt2 = new Text(dayOfWeek);
 		txt2.setTextAlignment(TextAlignment.CENTER);
 		temperature2 = new Text(forecast.get(1).temperature + "°");
 		weather2 = new Text("Wind speed: " + forecast.get(1).windSpeed +
@@ -114,9 +103,15 @@ public class JavaFX extends Application {
 
 
 
+	// The third box function //
+	// This function shows the weather information of the third day //
+	// The box is clickable. It's a button.
 	public Button thirdBox(ArrayList<Period> forecast){
 
-		txt3 = new Text("After Tomorrow");
+		SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.ENGLISH);
+		String dayOfWeek = dayFormat.format(forecast.get(2).endTime);
+
+		txt3 = new Text(dayOfWeek);
 		txt3.setTextAlignment(TextAlignment.CENTER);
 		temperature3 = new Text(forecast.get(2).temperature + "°");
 		weather3 = new Text("Wind speed: " + forecast.get(2).windSpeed +
@@ -129,22 +124,78 @@ public class JavaFX extends Application {
 		return button3;
 	}
 
-// End of Mohammad's Functions //
+
+
+	// The function that returns the VBox that contains additional information for the next //
+	// 7 days //
+
+	private static String capitalizeFirstLetter(String day) {
+		return day.charAt(0) + day.substring(1).toLowerCase();
+	}
+
+	public VBox collapseButton(ArrayList<Period> forecast){
+		VBox container = new VBox(10);
+		LocalDate today = LocalDate.now();
+
+
+		// Button to toggle visibility
+		Button collapseButton = new Button("▼"); // Default down arrow
+		collapseButton.setMaxWidth(Double.MAX_VALUE);
+		VBox collapsibleContent = new VBox(10);
+		collapsibleContent.setAlignment(Pos.CENTER);
+
+		// Sample content inside collapsible area
+
+		for (int i = 0; i < 7; i++) {
+
+			Text textInfo;
+			SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.ENGLISH);
+			if(i == 0){
+				textInfo = new Text("Today " + forecast.get(i).temperature + "°");
+				textInfo.setFont(Font.font("Bison", 20));
+
+			} else {
+				LocalDate futureDate = today.plusDays(i);
+				DayOfWeek dayOfWeek = futureDate.getDayOfWeek();
+				textInfo = new Text(capitalizeFirstLetter(dayOfWeek.toString()) + " " +
+						forecast.get(i).temperature + "°");
+				textInfo.setFont(Font.font("Bison", 20));
+			}
+
+			collapsibleContent.getChildren().addAll(textInfo);
+		}
+
+
+		collapsibleContent.setVisible(false);
+
+
+		collapseButton.setOnAction(event -> {
+			boolean isVisible = collapsibleContent.isVisible();
+			collapsibleContent.setVisible(!isVisible);
+			collapseButton.setText(isVisible ? "▼" : "≡"); // Change button text
+		});
+
+		container.getChildren().addAll(collapseButton, collapsibleContent);
+		container.setAlignment(Pos.CENTER);
+		return container;
+	}
+
+/////////////////////// End of Mohammad's Functions ///////////////////////////
 
 	//feel free to remove the starter code from this method
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
+		primaryStage.setTitle("Daily Weather");
+
 		ArrayList<Period> forecast = WeatherAPI.getForecast("LOT",77,70);
 
 		Button returnButton2 = new Button("Return");
 		Button exitButton2 = new Button("Exit");
+
 		HBox bottomButtons2 = new HBox(20,returnButton2,exitButton2);
 
-		primaryStage.setTitle("Daily Weather");
-
-
-		/// Mohammed Kamil Code: Daily Weather //
+	///////////// Mohammed Kamil Code: Daily Weather, DO NOT TOUCH ////////////////
 
 
 		if (forecast == null){
@@ -179,28 +230,29 @@ public class JavaFX extends Application {
 //			fadeOut.playFromStart();
 //		});
 
-
-		//////////
-
 		Button firstDay = firstBox(forecast);
 		Button secondDay = secondBox(forecast);
 		Button thirdDay = thirdBox(forecast);
+		VBox collapseInfo = collapseButton(forecast);
 
 
 		HBox unite = new HBox(20, firstDay ,secondDay ,thirdDay);
-
 		unite.setAlignment(Pos.BOTTOM_CENTER);
 
 		HBox bottomButtons3 = new HBox(20,returnButton2,exitButton2);
 		bottomButtons3.setAlignment(Pos.BOTTOM_CENTER);
 
-		VBox vbox4 = new VBox(20,currentDay, unite, bottomButtons3);
+		VBox vbox4 = new VBox(10,currentDay, unite, collapseInfo, bottomButtons3);
 
 		Scene scene = new Scene(vbox4, 600,780);
 
 
-
 		//////////////// END OF Mohammed Kamil Code //////////////////
+
+
+
+
+
 
 		//////////////////////////////////////////////////////////////
 
