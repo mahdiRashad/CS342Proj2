@@ -1,9 +1,9 @@
 weather/Properties.class
-PointsResponse.class
 MyWeatherAPI.class
 weather/Elevation.class
-GridInfo.class
+GridInformation.class
 weather/Root.class
+Response.class
 weather/Geometry.class
 weather/Period.class
 weather/WeatherAPI.class
