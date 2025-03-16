@@ -33,7 +33,6 @@ public class JavaFX extends Application {
 	Text txt2, txt3, temperature2, temperature3;
 	Text weather2, weather3;
 
-
 	public static void main(String[] args) {
 
 		launch(args);
@@ -67,10 +66,6 @@ public class JavaFX extends Application {
 
 	public VBox ChicagoWeatherScene(Stage primaryStage, Scene mainScene){
 		primaryStage.setTitle("Weather App");
-
-
-		primaryStage.setTitle("Daily Weather");
-
 		ArrayList<Period> forecast = WeatherAPI.getForecast("LOT",77,70);
 
 
@@ -144,10 +139,19 @@ public class JavaFX extends Application {
 	public VBox otherLocation(Stage primaryStage, Scene mainScene){
 		TextField latitudeField;
 		TextField longitudeField;
-		TextArea resultArea;
-		resultArea = new TextArea();
-		resultArea.setEditable(false);
-		resultArea.setWrapText(true);
+
+		VBox currentDay = new VBox();
+		Button firstDay = new Button();
+		Button secondDay = new Button();
+		Button thirdDay = new Button();
+		VBox collapseInfo = new VBox();
+		HBox unite = new HBox();
+
+		currentDay.setVisible(false);
+		collapseInfo.setVisible(false);
+		unite.setVisible(false);
+
+
 		Label latitudeLabel = new Label("Enter Latitude:");
 		latitudeField = new TextField();
 
@@ -185,19 +189,34 @@ public class JavaFX extends Application {
 			if (forecastLocation == null) {
 				throw new RuntimeException("Forecast did not load");
 			}
-			resultArea.setText(forecastLocation.get(0).shortForecast + "\n" + "Today's weather is: " + String.valueOf(forecastLocation.get(0).temperature));
 
+			VBox newCurrentDay = startDisplay(forecastLocation);
+			Button newFirstDay = firstBox(forecastLocation);
+			Button newSecondDay = secondBox(forecastLocation);
+			Button newThirdDay = thirdBox(forecastLocation);
+			VBox newCollapseInfo = collapseButton(forecastLocation);
+
+			HBox newUnite = new HBox(20, newFirstDay, newSecondDay, newThirdDay);
+			newUnite.setAlignment(Pos.BOTTOM_CENTER);
+
+			javafx.application.Platform.runLater(() -> {
+				currentDay.getChildren().setAll(newCurrentDay.getChildren());
+				unite.getChildren().setAll(newUnite.getChildren());
+				collapseInfo.getChildren().setAll(newCollapseInfo.getChildren());
+
+				currentDay.setVisible(true);
+				unite.setVisible(true);
+				collapseInfo.setVisible(true);
+			});
 		});
 
-		VBox vbox = new VBox(10, latitudeLabel, latitudeField, longitudeLabel, longitudeField, fetchButton, resultArea, bottomButtons3);
+		VBox vbox = new VBox(10, latitudeLabel, latitudeField, longitudeLabel, longitudeField, fetchButton,currentDay,unite,collapseInfo,bottomButtons3);
 		vbox.setPadding(new Insets(15));
 		return vbox;
 	}
 	/////////////////////// End of Mahdi's Functions ///////////////////////////
 
 	// Mohammad's Functions, DO NOT TOUCH //
-
-
 	// The function that displays the current day weather information //
 	public VBox startDisplay(ArrayList<Period> forecast){
 		Text today = new Text("Current Temperature");
@@ -337,17 +356,11 @@ public class JavaFX extends Application {
 		container.setAlignment(Pos.CENTER);
 		return container;
 	}
+        /////////////// End of Mohammad's Functions ////////////////////
 
-/////////////////////// End of Mohammad's Functions ///////////////////////////
-
-	//feel free to remove the starter code from this method
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		this.primaryStage = primaryStage;
-
-
-		//////////////// END OF Mohammed Kamil Code //////////////////
-
 
 		//////////////// Mahdi Yahya Code Starts Here ////////////////
 		Image mainImage = new Image(new File("src/main/resources/main.gif").toURI().toString());
