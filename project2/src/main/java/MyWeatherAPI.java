@@ -9,17 +9,14 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class MyWeatherAPI extends WeatherAPI {
-    public static GridInfo getGridInfo(String latitude, String longitude) {
-        String url = "https://api.weather.gov/points/" + latitude + "," + longitude;
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .header("User-Agent", "MyWeatherApp (your_email@example.com)") // NWS requires a User-Agent
-                .build();
+    public static GridInformation getGridInfo(String latitude, String longitude) {
+        String GridURL = "https://api.weather.gov/points/" + latitude + "," + longitude;
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(GridURL)).build();
         try {
             HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-            ObjectMapper mapper = new ObjectMapper();
-            PointsResponse pointsResponse = mapper.readValue(response.body(), PointsResponse.class);
-            return pointsResponse.properties;
+            ObjectMapper om = new ObjectMapper();
+            Response toGet = om.readValue(response.body(), Response.class);
+            return toGet.properties;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -28,11 +25,11 @@ public class MyWeatherAPI extends WeatherAPI {
 }
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-class PointsResponse {
-    public GridInfo properties;
+class Response {
+    public GridInformation properties;
 }
 @JsonIgnoreProperties(ignoreUnknown = true)
-class GridInfo {
+class GridInformation {
     public String gridId;
     public int gridX;
     public int gridY;
