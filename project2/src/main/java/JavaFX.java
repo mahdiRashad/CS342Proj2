@@ -30,21 +30,205 @@ import javafx.scene.control.Button;
 import javafx.scene.text.TextAlignment;
 
 
+
+
 public class JavaFX extends Application {
+	private Stage primaryStage;
+	private Scene mainScene, otherLocation, chicagoScene ;
+
 	Text txt1, temperature, weather;
 	Text txt2, txt3, temperature2, temperature3;
 	Text weather2, weather3;
-
 
 	public static void main(String[] args) {
 
 		launch(args);
 	}
 
+	// Mahdi's Functions, DO NOT TOUCH //
+	public HBox mainSceneBottomButtons(){
+		Button returnButton1 = new Button("Home");
+		returnButton1.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
+		returnButton1.setFont(new Font("Bison", 28));
+		returnButton1.setMinWidth(150);
+		returnButton1.setOnAction(e -> {
+			Alert alert = new Alert(Alert.AlertType.INFORMATION);
+			alert.setTitle("Information");
+			alert.setHeaderText(null);
+			alert.setContentText("Already on the home screen.");
+			alert.showAndWait();
+		});
+
+		Button exitButton1 = new Button("Exit");
+		exitButton1.setStyle("-fx-background-color: #D9534F; -fx-text-fill: white;");
+		exitButton1.setFont(new Font("Bison", 28));
+		exitButton1.setMinWidth(150);
+		exitButton1.setOnAction(e -> System.exit(0));
+
+		HBox bottomButtons1 = new HBox(20, returnButton1, exitButton1);
+		bottomButtons1.setAlignment(Pos.BOTTOM_CENTER);
+		bottomButtons1.setPadding(new Insets(20, 0, 20, 0));
+		return bottomButtons1;
+	}
+
+
+	///  CHICAGO FUNCTION //
+	public VBox ChicagoWeatherScene(Stage primaryStage, Scene mainScene){
+		primaryStage.setTitle("Weather App");
+		ArrayList<Period> forecast = WeatherAPI.getForecast("LOT",77,70);
+
+
+		///////////// Mohammed Kamil Code: Daily Weather, DO NOT TOUCH ////////////////
+
+
+		if (forecast == null){
+			throw new RuntimeException("Forecast did not load");
+		}
+
+		// The function call for current day information //
+		VBox currentDay = startDisplay(forecast);
+
+
+//		Button button = new Button("Hover Me");
+
+//		// Default button style
+//		button.setStyle("-fx-background-color: #3498db; -fx-text-fill: white;");
+//
+//		// Hover transition
+//		FadeTransition fadeIn = new FadeTransition(Duration.millis(300), button);
+//		fadeIn.setFromValue(1.0);
+//		fadeIn.setToValue(0.8);
+//
+//		FadeTransition fadeOut = new FadeTransition(Duration.millis(300), button);
+//		fadeOut.setFromValue(0.8);
+//		fadeOut.setToValue(1.0);
+//
+//		button.setOnMouseEntered(e -> {
+//			button.setStyle("-fx-background-color: #2980b9; -fx-text-fill: white;");
+//			fadeIn.playFromStart();
+//		});
+//
+//		button.setOnMouseExited(e -> {
+//			button.setStyle("-fx-background-color: #3498db; -fx-text-fill: white;");
+//			fadeOut.playFromStart();
+//		});
+
+		Button firstDay = firstBox(forecast);
+		Button secondDay = secondBox(forecast);
+		Button thirdDay = thirdBox(forecast);
+		VBox collapseInfo = collapseButton(forecast);
+
+
+		HBox unite = new HBox(45, firstDay ,secondDay ,thirdDay);
+		unite.setAlignment(Pos.BOTTOM_CENTER);
+
+
+		Button returnButton2 = new Button("Return");
+		Button exitButton2 = new Button("Exit");
+		HBox bottomButtons2 = new HBox(20, returnButton2, exitButton2);
+
+		returnButton2.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
+		returnButton2.setFont(new Font("Bison", 28));
+		returnButton2.setMinWidth(150);
+		returnButton2.setOnAction(e -> primaryStage.setScene(mainScene));
+
+		exitButton2.setStyle("-fx-background-color: #D9534F; -fx-text-fill: white;");
+		exitButton2.setFont(new Font("Bison", 28));
+		exitButton2.setMinWidth(150);
+		exitButton2.setOnAction(e -> System.exit(0));
+
+		bottomButtons2.setAlignment(Pos.BOTTOM_CENTER);
+		bottomButtons2.setPadding(new Insets(20, 0, 20, 0));
+
+		VBox vbox4 = new VBox(20,currentDay, unite, collapseInfo, bottomButtons2);
+
+		return vbox4;
+	}
+
+
+	public VBox otherLocation(Stage primaryStage, Scene mainScene){
+		TextField latitudeField;
+		TextField longitudeField;
+
+		VBox currentDay = new VBox();
+		Button firstDay = new Button();
+		Button secondDay = new Button();
+		Button thirdDay = new Button();
+		VBox collapseInfo = new VBox();
+		HBox unite = new HBox();
+
+		currentDay.setVisible(false);
+		collapseInfo.setVisible(false);
+		unite.setVisible(false);
+
+
+		Label latitudeLabel = new Label("Enter Latitude:");
+		latitudeField = new TextField();
+
+		Label longitudeLabel = new Label("Enter Longitude:");
+		longitudeField = new TextField();
+
+		Button returnButton3 = new Button("Home");
+		returnButton3.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
+		returnButton3.setFont(new Font("Bison", 28));
+		returnButton3.setMinWidth(150);
+		returnButton3.setOnAction(e -> {primaryStage.setScene(mainScene);});
+
+		Button exitButton3 = new Button("Exit");
+		exitButton3.setStyle("-fx-background-color: #D9534F; -fx-text-fill: white;");
+		exitButton3.setFont(new Font("Bison", 28));
+		exitButton3.setMinWidth(150);
+		exitButton3.setOnAction(e -> System.exit(0));
+
+		HBox bottomButtons3 = new HBox(20, returnButton3, exitButton3);
+		bottomButtons3.setAlignment(Pos.BOTTOM_CENTER);
+		bottomButtons3.setPadding(new Insets(20, 0, 20, 0));
+
+		Button fetchButton = new Button("Get Forecast");
+		fetchButton.setOnAction(e -> {
+
+			String latitude = latitudeField.getText();
+			String longitude = longitudeField.getText();
+
+			GridInformation gridInfo = MyWeatherAPI.getGridInfo(latitude, longitude);
+			if (gridInfo == null) {
+				System.out.println("Failed to retrieve grid information.");
+				return;
+			}
+			ArrayList<Period> forecastLocation = WeatherAPI.getForecast(gridInfo.gridId, gridInfo.gridX, gridInfo.gridY);
+			if (forecastLocation == null) {
+				throw new RuntimeException("Forecast did not load");
+			}
+
+			VBox newCurrentDay = startDisplay(forecastLocation);
+			Button newFirstDay = firstBox(forecastLocation);
+			Button newSecondDay = secondBox(forecastLocation);
+			Button newThirdDay = thirdBox(forecastLocation);
+			VBox newCollapseInfo = collapseButton(forecastLocation);
+
+			HBox newUnite = new HBox(40, newFirstDay, newSecondDay, newThirdDay);
+			newUnite.setAlignment(Pos.BOTTOM_CENTER);
+
+			javafx.application.Platform.runLater(() -> {
+				currentDay.getChildren().setAll(newCurrentDay.getChildren());
+				unite.getChildren().setAll(newUnite.getChildren());
+				collapseInfo.getChildren().setAll(newCollapseInfo.getChildren());
+
+				currentDay.setVisible(true);
+				unite.setVisible(true);
+				collapseInfo.setVisible(true);
+			});
+		});
+
+		VBox vbox = new VBox(10, latitudeLabel, latitudeField, longitudeLabel, longitudeField, fetchButton,currentDay,unite,collapseInfo,bottomButtons3);
+		vbox.setPadding(new Insets(15));
+		return vbox;
+	}
+	/////////////////////// End of Mahdi's Functions ///////////////////////////
+
+
 
 	// Mohammad's Functions, DO NOT TOUCH //
-
-
 	// The function that displays the current day weather information //
 	public VBox startDisplay(ArrayList<Period> forecast){
 		Text today = new Text("Current Temperature");
@@ -66,7 +250,6 @@ public class JavaFX extends Application {
 
 		return currentDay;
 	}
-
 
 
 
@@ -176,7 +359,7 @@ public class JavaFX extends Application {
 				textInfo = new Text(capitalizeFirstLetter(dayOfWeek.toString()) + " " +
 						forecast.get(i).temperature + "°");
 			}
-			textInfo.setFont(Font.font("Bison", 17));
+			textInfo.setFont(Font.font("Bison", 20));
 			collapsibleContent.getChildren().add(textInfo);
 		}
 
@@ -230,222 +413,36 @@ public class JavaFX extends Application {
 		container.setAlignment(Pos.CENTER);
 		return container;
 	}
+	/////////////// End of Mohammad's Functions ////////////////////
 
-	///////////////////////
 
-//	public VBox collapseButton(ArrayList<Period> forecast) {
-//		VBox container = new VBox(10);
-//		LocalDate today = LocalDate.now();
-//
-//		// Toggle Button
-//		Button collapseButton = new Button("▼"); // Default: Down Arrow
-//		collapseButton.setMaxWidth(Double.MAX_VALUE);
-//
-//		// Collapsible Content
-//		VBox collapsibleContent = new VBox(10);
-//		collapsibleContent.setAlignment(Pos.CENTER);
-//		collapsibleContent.setManaged(false); // Prevent empty space when collapsed
-//		collapsibleContent.setScaleY(0); // Start fully collapsed
-//
-//		for (int i = 0; i < 7; i++) {
-//			Text textInfo;
-//			if (i == 0) {
-//				textInfo = new Text("Today " + forecast.get(i).temperature + "°");
-//			} else {
-//				LocalDate futureDate = today.plusDays(i);
-//				DayOfWeek dayOfWeek = futureDate.getDayOfWeek();
-//				textInfo = new Text(capitalizeFirstLetter(dayOfWeek.toString()) + " " +
-//						forecast.get(i).temperature + "°");
-//			}
-//
-//			textInfo.setFont(Font.font("Bison", 20));
-//			collapsibleContent.getChildren().add(textInfo);
-//		}
-//
-//
-//
-//
-//		// Smooth Transition Animation
-//		ScaleTransition expandTransition = new ScaleTransition(Duration.millis(300), collapsibleContent);
-//		expandTransition.setFromY(0);
-//		expandTransition.setToY(1);
-//
-//		ScaleTransition collapseTransition = new ScaleTransition(Duration.millis(300), collapsibleContent);
-//		collapseTransition.setFromY(1);
-//		collapseTransition.setToY(0);
-//
-//
-//		collapseButton.setOnAction(event -> {
-//			boolean isExpanded = collapsibleContent.getScaleY() > 0;
-//
-//			if (isExpanded) {
-//				collapseTransition.play();
-//			} else {
-//				collapsibleContent.setManaged(true);
-//				expandTransition.play();
-//			}
-//
-//			expandTransition.setOnFinished(e -> collapsibleContent.setManaged(true));
-//			collapseTransition.setOnFinished(e -> collapsibleContent.setManaged(false));
-//
-//			collapseButton.setText(isExpanded ? "▼" : "≡");
-//		});
-//
-//		container.getChildren().addAll(collapseButton, collapsibleContent);
-//		container.setAlignment(Pos.CENTER);
-//		return container;
-//	}
 
-/////////////////////// End of Mohammad's Functions ///////////////////////////
-
-	//feel free to remove the starter code from this method
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-
-		primaryStage.setTitle("Daily Weather");
-
-		ArrayList<Period> forecast = WeatherAPI.getForecast("LOT",77,70);
-
-		Button returnButton2 = new Button("Return");
-		Button exitButton2 = new Button("Exit");
-
-		HBox bottomButtons2 = new HBox(20,returnButton2,exitButton2);
-
-	///////////// Mohammed Kamil Code: Daily Weather, DO NOT TOUCH ////////////////
-
-
-		if (forecast == null){
-			throw new RuntimeException("Forecast did not load");
-		}
-
-		// The function call for current day information //
-		VBox currentDay = startDisplay(forecast);
-
-
-//		Button button = new Button("Hover Me");
-
-//		// Default button style
-//		button.setStyle("-fx-background-color: #3498db; -fx-text-fill: white;");
-//
-//		// Hover transition
-//		FadeTransition fadeIn = new FadeTransition(Duration.millis(300), button);
-//		fadeIn.setFromValue(1.0);
-//		fadeIn.setToValue(0.8);
-//
-//		FadeTransition fadeOut = new FadeTransition(Duration.millis(300), button);
-//		fadeOut.setFromValue(0.8);
-//		fadeOut.setToValue(1.0);
-//
-//		button.setOnMouseEntered(e -> {
-//			button.setStyle("-fx-background-color: #2980b9; -fx-text-fill: white;");
-//			fadeIn.playFromStart();
-//		});
-//
-//		button.setOnMouseExited(e -> {
-//			button.setStyle("-fx-background-color: #3498db; -fx-text-fill: white;");
-//			fadeOut.playFromStart();
-//		});
-
-		Button firstDay = firstBox(forecast);
-		Button secondDay = secondBox(forecast);
-		Button thirdDay = thirdBox(forecast);
-		VBox collapseInfo = collapseButton(forecast);
-
-
-		HBox unite = new HBox(60, firstDay ,secondDay ,thirdDay);
-		unite.setAlignment(Pos.BOTTOM_CENTER);
-
-		HBox bottomButtons3 = new HBox(20,returnButton2,exitButton2);
-		bottomButtons3.setAlignment(Pos.BOTTOM_CENTER);
-
-		VBox vbox4 = new VBox(10,currentDay, unite, collapseInfo, bottomButtons3);
-
-		Scene scene = new Scene(vbox4, 600,780);
-
-
-		//////////////// END OF Mohammed Kamil Code //////////////////
-
-
-
-
-
-
-		//////////////////////////////////////////////////////////////
+		this.primaryStage = primaryStage;
 
 		//////////////// Mahdi Yahya Code Starts Here ////////////////
-
-		TextField latitudeField;
-		TextField longitudeField;
-		TextArea resultArea;
-		resultArea = new TextArea();
-		resultArea.setEditable(false);
-		resultArea.setWrapText(true);
-		Label latitudeLabel = new Label("Enter Latitude:");
-		latitudeField = new TextField();
-
-		Label longitudeLabel = new Label("Enter Longitude:");
-		longitudeField = new TextField();
-
-		Button fetchButton = new Button("Get Forecast");
-		fetchButton.setOnAction(e ->{
-
-			String latitude = latitudeField.getText();
-			String longitude = longitudeField.getText();
-
-			GridInfo gridInfo = MyWeatherAPI.getGridInfo(latitude, longitude);
-			if (gridInfo == null) {
-				System.out.println("Failed to retrieve grid information.");
-				return;
-			}
-			ArrayList<Period> forecastLocation = WeatherAPI.getForecast(gridInfo.gridId,gridInfo.gridX,gridInfo.gridY);
-			if (forecastLocation == null){
-				throw new RuntimeException("Forecast did not load");
-			}
-			resultArea.setText(forecastLocation.get(0).shortForecast + "Today's weather is: "+String.valueOf(forecastLocation.get(0).temperature));
-
-		});
-
-		VBox vbox = new VBox(10, latitudeLabel, latitudeField, longitudeLabel, longitudeField, fetchButton, resultArea);
-		vbox.setPadding(new Insets(15));
-
-		Scene otherLocation = new Scene( vbox, 520,780);
-
-
-		primaryStage.setTitle("Weather App");
-		//int temp = WeatherAPI.getTodaysTemperature(77,70);
-		if (forecast == null){
-			throw new RuntimeException("Forecast did not load");
-		}
-		TextField temperatureLocation = new TextField();
-		TextField weatherLocation = new TextField();
-		temperatureLocation.setText("Today's weather is: "+String.valueOf(forecast.get(0).temperature));
-		weatherLocation.setText(forecast.get(0).shortForecast);
-
-		Scene sceneLocation = new Scene(new VBox(temperatureLocation,weatherLocation,bottomButtons2), 520,780);
-
-
-
-		Image image = new Image(new File("src/main/resources/main.gif").toURI().toString());
-		ImageView imageview = new ImageView(image);
+		Image mainImage = new Image(new File("src/main/resources/main.gif").toURI().toString());
+		ImageView imageview = new ImageView(mainImage);
 		imageview.setFitWidth(400);
 		imageview.setPreserveRatio(true);
 
-		Text title = new Text("Weather");
-		title.setFont(new Font("Bison", 64));
-		title.setFill(Color.WHITE);
+		Text mainTitle = new Text("Weather");
+		mainTitle.setFont(new Font("Bison", 64));
+		mainTitle.setFill(Color.WHITE);
 
-		Text title1 = new Text("ForeCasts");
-		title1.setFont(new Font("Bison", 64));
-		title1.setFill(Color.YELLOW);
+		Text mainTitle1 = new Text("ForeCasts");
+		mainTitle1.setFont(new Font("Bison", 64));
+		mainTitle1.setFill(Color.YELLOW);
 
-		VBox textVBox =  new VBox(title,title1);
-		textVBox.setAlignment(Pos.TOP_CENTER);
+		VBox mainTextVBox = new VBox(mainTitle, mainTitle1);
+		mainTextVBox.setAlignment(Pos.TOP_CENTER);
 
 		Button roundButton = new Button("Chicago");
 		roundButton.setFont(new Font("Bison", 28));
 		roundButton.setTextFill(Color.WHITE);
 		roundButton.setStyle("-fx-background-color: #008CBA; -fx-background-radius: 50; -fx-padding: 10 20;");
-		roundButton.setOnAction(e -> primaryStage.setScene(scene) );
+		roundButton.setOnAction(e -> primaryStage.setScene(chicagoScene));
 
 		Button roundButton1 = new Button("Other Locations");
 		roundButton1.setFont(new Font("Bison", 28));
@@ -453,59 +450,34 @@ public class JavaFX extends Application {
 		roundButton1.setStyle("-fx-background-color: #008CBA; -fx-background-radius: 50; -fx-padding: 10 20;");
 		roundButton1.setOnAction(e -> {primaryStage.setScene(otherLocation);});
 
-		HBox buttons = new HBox(10,roundButton, roundButton1);
+		HBox buttons = new HBox(10, roundButton, roundButton1);
 		buttons.setAlignment(Pos.TOP_CENTER);
 		buttons.setPadding(new Insets(40, 0, 0, 0));
 
-		Button returnButton1 = new Button("Home");
-		returnButton1.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
-		returnButton1.setFont(new Font("Bison", 28));
-		returnButton1.setMinWidth(150);
-		returnButton1.setOnAction(e -> {
-			Alert alert = new Alert(Alert.AlertType.INFORMATION);
-			alert.setTitle("Information");
-			alert.setHeaderText(null);
-			alert.setContentText("Already on the home screen.");
-			alert.showAndWait();
-		});
 
-		Button exitButton1 = new Button("Exit");
-		exitButton1.setStyle("-fx-background-color: #D9534F; -fx-text-fill: white;");
-		exitButton1.setFont(new Font("Bison", 28));
-		exitButton1.setMinWidth(150);
-		exitButton1.setOnAction(e -> System.exit(0)); // Exit app
-
-		HBox bottomButtons1 = new HBox(20, returnButton1, exitButton1);
-		bottomButtons1.setAlignment(Pos.BOTTOM_CENTER);
-		bottomButtons1.setPadding(new Insets(20, 0, 20, 0));
-
-		VBox mainVBox =  new VBox(15,imageview,textVBox,buttons,bottomButtons1);
+		VBox mainVBox = new VBox(15, imageview, mainTextVBox, buttons, mainSceneBottomButtons());
 		mainVBox.setAlignment(Pos.TOP_CENTER);
 		mainVBox.setPadding(new Insets(0, 0, 0, 0));
 		mainVBox.setStyle("-fx-background-color: #33495f;");
 
-		Scene mainScene = new Scene(mainVBox, 520,780);
+		mainScene = new Scene(mainVBox, 520, 780);
 
 
+		ScrollPane scrollOtherLocation = new ScrollPane(otherLocation(primaryStage, mainScene));
+		scrollOtherLocation.setFitToWidth(true); // Optional: Ensure the content fits the width
+		scrollOtherLocation.setFitToHeight(false); // Allow vertical scrolling
 
-		returnButton2.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
-		returnButton2.setFont(new Font("Bison", 28));
-		returnButton2.setMinWidth(150);
-		returnButton2.setOnAction(e -> primaryStage.setScene(mainScene));
+		otherLocation = new Scene(scrollOtherLocation, 520, 780);
 
-		exitButton2.setStyle("-fx-background-color: #D9534F; -fx-text-fill: white;");
-		exitButton2.setFont(new Font("Bison", 28));
-		exitButton2.setMinWidth(150);
-		exitButton2.setOnAction(e -> System.exit(0));
+		// Wrap the VBox in a ScrollPane
+		ScrollPane scrollPaneChicago = new ScrollPane(ChicagoWeatherScene(primaryStage, mainScene));
+		scrollPaneChicago.setFitToWidth(true); // Optional: Ensure the content fits the width
+		scrollPaneChicago.setFitToHeight(false); // Allow vertical scrolling
 
-		bottomButtons2.setAlignment(Pos.BOTTOM_CENTER);
-		bottomButtons2.setPadding(new Insets(20, 0, 20, 0));
-
-
+		chicagoScene = new Scene(scrollPaneChicago, 520, 780);
 
 		primaryStage.setScene(mainScene);
 		primaryStage.show();
+		//////////////// END OF Mahdi Yahya Code ////////////////
 	}
-
 }
-			//////////////// END OF Mahdi Yahya Code ////////////////
