@@ -1,3 +1,7 @@
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.ScaleTransition;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -7,9 +11,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import weather.Period;
 import weather.WeatherAPI;
 import java.io.File;
@@ -18,7 +24,6 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Locale;
-
 import javafx.scene.image.Image;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -63,19 +68,24 @@ public class JavaFX extends Application {
 	}
 
 
+
+
 	// The first box function //
 	// This function shows the weather information of the first day //
 	// The box is clickable. It's a button.
 	public Button firstBox(ArrayList<Period> forecast){
 		txt1 = new Text("Today");
 		temperature = new Text(forecast.getFirst().temperature + "°");
-		weather = new Text("Wind speed: " + forecast.getFirst().windSpeed +
-				"\n Wind direction: " + forecast.getFirst().windDirection);
-		VBox vbox1 = new VBox(7,txt1,temperature,weather);
+		VBox vbox1 = new VBox(7,txt1,temperature);
 		vbox1.setAlignment(Pos.CENTER);
 
 		Button button = new Button();
 		button.setGraphic(vbox1);
+		button.setMaxWidth(100);
+		button.setMinWidth(100);
+		button.setMaxHeight(150);
+		button.setMinHeight(150);
+		button.setStyle("-fx-background-radius: 41px");
 
 		return button;
 	}
@@ -91,14 +101,18 @@ public class JavaFX extends Application {
 		txt2 = new Text(dayOfWeek);
 		txt2.setTextAlignment(TextAlignment.CENTER);
 		temperature2 = new Text(forecast.get(1).temperature + "°");
-		weather2 = new Text("Wind speed: " + forecast.get(1).windSpeed +
-				"\n Wind direction: " + forecast.get(1).windDirection);
-		VBox vbox2 = new VBox(7,txt2,temperature2,weather2);
-		vbox2.setAlignment(Pos.CENTER);
 
-		Button button2 = new Button();
-		button2.setGraphic(vbox2);
-		return button2;
+		VBox vbox1 = new VBox(7,txt2,temperature2);
+		vbox1.setAlignment(Pos.CENTER);
+
+		Button button = new Button();
+		button.setGraphic(vbox1);
+		button.setMaxWidth(100);
+		button.setMinWidth(100);
+		button.setMaxHeight(150);
+		button.setMinHeight(150);
+		button.setStyle("-fx-background-radius: 41px");
+		return button;
 	}
 
 
@@ -114,14 +128,18 @@ public class JavaFX extends Application {
 		txt3 = new Text(dayOfWeek);
 		txt3.setTextAlignment(TextAlignment.CENTER);
 		temperature3 = new Text(forecast.get(2).temperature + "°");
-		weather3 = new Text("Wind speed: " + forecast.get(2).windSpeed +
-				"\n Wind direction: " + forecast.get(2).windDirection);
-		VBox vbox3 = new VBox(7,txt3,temperature3, weather3);
-		vbox3.setAlignment(Pos.CENTER);
+		VBox vbox1 = new VBox(7,txt3,temperature3);
+		vbox1.setAlignment(Pos.CENTER);
 
-		Button button3 = new Button();
-		button3.setGraphic(vbox3);
-		return button3;
+		Button button = new Button();
+		button.setGraphic(vbox1);
+		button.setGraphic(vbox1);
+		button.setMaxWidth(100);
+		button.setMinWidth(100);
+		button.setMaxHeight(150);
+		button.setMinHeight(150);
+		button.setStyle("-fx-background-radius: 41px");
+		return button;
 	}
 
 
@@ -133,52 +151,150 @@ public class JavaFX extends Application {
 		return day.charAt(0) + day.substring(1).toLowerCase();
 	}
 
-	public VBox collapseButton(ArrayList<Period> forecast){
+	public VBox collapseButton(ArrayList<Period> forecast) {
+
 		VBox container = new VBox(10);
 		LocalDate today = LocalDate.now();
 
-
-		// Button to toggle visibility
-		Button collapseButton = new Button("▼"); // Default down arrow
+		// Toggle Button
+		Button collapseButton = new Button("▼"); // Default: Down Arrow
 		collapseButton.setMaxWidth(Double.MAX_VALUE);
+
+		// Collapsible Content
 		VBox collapsibleContent = new VBox(10);
 		collapsibleContent.setAlignment(Pos.CENTER);
-
-		// Sample content inside collapsible area
+		collapsibleContent.setManaged(false); // Prevent empty space when collapsed
+		collapsibleContent.setScaleY(0); // Start fully collapsed
 
 		for (int i = 0; i < 7; i++) {
-
 			Text textInfo;
-			SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.ENGLISH);
-			if(i == 0){
+			if (i == 0) {
 				textInfo = new Text("Today " + forecast.get(i).temperature + "°");
-				textInfo.setFont(Font.font("Bison", 20));
-
 			} else {
 				LocalDate futureDate = today.plusDays(i);
 				DayOfWeek dayOfWeek = futureDate.getDayOfWeek();
 				textInfo = new Text(capitalizeFirstLetter(dayOfWeek.toString()) + " " +
 						forecast.get(i).temperature + "°");
-				textInfo.setFont(Font.font("Bison", 20));
 			}
-
-			collapsibleContent.getChildren().addAll(textInfo);
+			textInfo.setFont(Font.font("Bison", 17));
+			collapsibleContent.getChildren().add(textInfo);
 		}
 
+		// Smooth Transition Animation
+		ScaleTransition expandTransition = new ScaleTransition(Duration.millis(200), collapsibleContent);
+		expandTransition.setFromY(0);
+		expandTransition.setToY(1);
 
-		collapsibleContent.setVisible(false);
+		ScaleTransition collapseTransition = new ScaleTransition(Duration.millis(200), collapsibleContent);
+		collapseTransition.setFromY(1);
+		collapseTransition.setToY(0);
 
+
+		double collapsedHeight = 0;
+		double expandedHeight = 7 * 35;
+
+		Rectangle clip = new Rectangle();
+		clip.setWidth(200);  // Adjust width based on layout
+		clip.setHeight(collapsedHeight);
+
+		collapsibleContent.setMinHeight(0);
+		collapsibleContent.setMaxHeight(0);
 
 		collapseButton.setOnAction(event -> {
-			boolean isVisible = collapsibleContent.isVisible();
-			collapsibleContent.setVisible(!isVisible);
-			collapseButton.setText(isVisible ? "▼" : "≡"); // Change button text
+
+			boolean isExpanded = collapsibleContent.getMaxHeight() > 0;
+
+			if (isExpanded) {
+				collapseTransition.play();
+			} else {
+				collapsibleContent.setManaged(true);
+				expandTransition.play();
+			}
+
+			expandTransition.setOnFinished(e -> collapsibleContent.setManaged(true));
+			collapseTransition.setOnFinished(e -> collapsibleContent.setManaged(false));
+
+
+			double targetHeight = isExpanded ? collapsedHeight : expandedHeight;
+			Timeline timeline = new Timeline(
+					new KeyFrame(Duration.millis(200),
+							new KeyValue(clip.heightProperty(), targetHeight),
+							new KeyValue(collapsibleContent.maxHeightProperty(), targetHeight))
+			);
+			timeline.play();
+
+			collapseButton.setText(isExpanded ? "▼" : "≡");
 		});
 
 		container.getChildren().addAll(collapseButton, collapsibleContent);
 		container.setAlignment(Pos.CENTER);
 		return container;
 	}
+
+	///////////////////////
+
+//	public VBox collapseButton(ArrayList<Period> forecast) {
+//		VBox container = new VBox(10);
+//		LocalDate today = LocalDate.now();
+//
+//		// Toggle Button
+//		Button collapseButton = new Button("▼"); // Default: Down Arrow
+//		collapseButton.setMaxWidth(Double.MAX_VALUE);
+//
+//		// Collapsible Content
+//		VBox collapsibleContent = new VBox(10);
+//		collapsibleContent.setAlignment(Pos.CENTER);
+//		collapsibleContent.setManaged(false); // Prevent empty space when collapsed
+//		collapsibleContent.setScaleY(0); // Start fully collapsed
+//
+//		for (int i = 0; i < 7; i++) {
+//			Text textInfo;
+//			if (i == 0) {
+//				textInfo = new Text("Today " + forecast.get(i).temperature + "°");
+//			} else {
+//				LocalDate futureDate = today.plusDays(i);
+//				DayOfWeek dayOfWeek = futureDate.getDayOfWeek();
+//				textInfo = new Text(capitalizeFirstLetter(dayOfWeek.toString()) + " " +
+//						forecast.get(i).temperature + "°");
+//			}
+//
+//			textInfo.setFont(Font.font("Bison", 20));
+//			collapsibleContent.getChildren().add(textInfo);
+//		}
+//
+//
+//
+//
+//		// Smooth Transition Animation
+//		ScaleTransition expandTransition = new ScaleTransition(Duration.millis(300), collapsibleContent);
+//		expandTransition.setFromY(0);
+//		expandTransition.setToY(1);
+//
+//		ScaleTransition collapseTransition = new ScaleTransition(Duration.millis(300), collapsibleContent);
+//		collapseTransition.setFromY(1);
+//		collapseTransition.setToY(0);
+//
+//
+//		collapseButton.setOnAction(event -> {
+//			boolean isExpanded = collapsibleContent.getScaleY() > 0;
+//
+//			if (isExpanded) {
+//				collapseTransition.play();
+//			} else {
+//				collapsibleContent.setManaged(true);
+//				expandTransition.play();
+//			}
+//
+//			expandTransition.setOnFinished(e -> collapsibleContent.setManaged(true));
+//			collapseTransition.setOnFinished(e -> collapsibleContent.setManaged(false));
+//
+//			collapseButton.setText(isExpanded ? "▼" : "≡");
+//		});
+//
+//		container.getChildren().addAll(collapseButton, collapsibleContent);
+//		container.setAlignment(Pos.CENTER);
+//		return container;
+//	}
 
 /////////////////////// End of Mohammad's Functions ///////////////////////////
 
@@ -236,7 +352,7 @@ public class JavaFX extends Application {
 		VBox collapseInfo = collapseButton(forecast);
 
 
-		HBox unite = new HBox(20, firstDay ,secondDay ,thirdDay);
+		HBox unite = new HBox(60, firstDay ,secondDay ,thirdDay);
 		unite.setAlignment(Pos.BOTTOM_CENTER);
 
 		HBox bottomButtons3 = new HBox(20,returnButton2,exitButton2);
