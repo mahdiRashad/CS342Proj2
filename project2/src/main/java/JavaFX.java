@@ -1,7 +1,4 @@
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.ScaleTransition;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -9,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -31,10 +29,13 @@ import javafx.scene.text.TextAlignment;
 
 
 
-
 public class JavaFX extends Application {
 	private Stage primaryStage;
-	private Scene mainScene, otherLocation, chicagoScene ;
+	private Scene mainScene, otherLocation, chicagoScene;
+	private StackPane mainPane1;
+	private StackPane mainPane2;
+	private ScrollPane scrollPane1;
+	private ScrollPane scrollPane2;
 
 	Text txt1, temperature, weather;
 	Text txt2, txt3, temperature2, temperature3;
@@ -88,30 +89,6 @@ public class JavaFX extends Application {
 		// The function call for current day information //
 		VBox currentDay = startDisplay(forecast);
 
-
-//		Button button = new Button("Hover Me");
-
-//		// Default button style
-//		button.setStyle("-fx-background-color: #3498db; -fx-text-fill: white;");
-//
-//		// Hover transition
-//		FadeTransition fadeIn = new FadeTransition(Duration.millis(300), button);
-//		fadeIn.setFromValue(1.0);
-//		fadeIn.setToValue(0.8);
-//
-//		FadeTransition fadeOut = new FadeTransition(Duration.millis(300), button);
-//		fadeOut.setFromValue(0.8);
-//		fadeOut.setToValue(1.0);
-//
-//		button.setOnMouseEntered(e -> {
-//			button.setStyle("-fx-background-color: #2980b9; -fx-text-fill: white;");
-//			fadeIn.playFromStart();
-//		});
-//
-//		button.setOnMouseExited(e -> {
-//			button.setStyle("-fx-background-color: #3498db; -fx-text-fill: white;");
-//			fadeOut.playFromStart();
-//		});
 
 		Button firstDay = firstBox(forecast);
 		Button secondDay = secondBox(forecast);
@@ -253,6 +230,101 @@ public class JavaFX extends Application {
 
 
 
+
+	///////////
+	///
+	///
+	///
+
+	private void applySlideTransition(ScrollPane newScene) {
+		if (!mainPane1.getChildren().contains(newScene)) {
+			newScene.setTranslateY(300); // Start below
+			mainPane1.getChildren().add(newScene); // Add it to the stack
+		}
+
+		// Slide Up Transition
+		TranslateTransition slideUp = new TranslateTransition(Duration.millis(300), newScene);
+		slideUp.setFromY(300);
+		slideUp.setToY(0);
+
+		// Fade In Transition
+		FadeTransition fadeIn = new FadeTransition(Duration.millis(200), newScene);
+		fadeIn.setFromValue(0.0);
+		fadeIn.setToValue(1.0);
+
+		// Play animations
+		slideUp.play();
+		fadeIn.play();
+
+		// Remove the previous scene after the transition (except the background)
+		slideUp.setOnFinished(e -> {
+			if (mainPane1.getChildren().size() > 1) {
+				mainPane1.getChildren().remove(0); // Remove the previous scene
+			}
+		});
+	}
+
+
+	private void applySlideTransitionDown(ScrollPane newScene, ScrollPane oldScene) {
+		if (!mainPane1.getChildren().contains(newScene)) {
+			newScene.setTranslateY(0); // Start up
+			mainPane1.getChildren().add(newScene); // Add it to the stack
+		}
+
+		// Slide Up Transition
+		TranslateTransition slideDown = new TranslateTransition(Duration.millis(250), oldScene);
+		slideDown.setFromY(0);
+		slideDown.setToY(300);
+
+		// Fade In Transition
+		FadeTransition fadeIn = new FadeTransition(Duration.millis(500), newScene);
+		fadeIn.setFromValue(0.0);
+		fadeIn.setToValue(1.0);
+
+		// Play animations
+		slideDown.play();
+		fadeIn.play();
+
+		// Remove the previous scene after the transition (except the background)
+		slideDown.setOnFinished(e -> {
+			if (mainPane1.getChildren().size() > 1) {
+				mainPane1.getChildren().remove(0); // Remove the previous scene
+			}
+		});
+
+	}
+
+	private ScrollPane getDetailedScene(ArrayList<Period> forecast, int num) {
+		ScrollPane pane = new ScrollPane();
+		Button button = new Button("Close");
+		button.setMinWidth(100);
+		button.setMinHeight(50);
+		button.setStyle("-fx-background-radius: 20px");
+
+		Text today = new Text("Today");
+		today.setFont(new Font("Bison", 20));
+		Text info = new Text(forecast.get(num).temperature + "°");
+
+		Text info2 = new Text("Wind Direction: " + forecast.get(num).windSpeed + "\n" +
+				forecast.get(num).windDirection);
+
+		info.setFont(new Font("Bison", 20));
+
+		VBox vbox = new VBox(20, today, info, info2, button);
+		vbox.setAlignment(Pos.CENTER);
+
+		pane.setContent(vbox);
+		pane.setFitToHeight(true);
+		pane.setFitToWidth(true);
+
+		button.setOnAction(e -> {
+			applySlideTransitionDown(scrollPane1, pane);
+		});
+
+        return pane;
+	}
+
+
 	// The first box function //
 	// This function shows the weather information of the first day //
 	// The box is clickable. It's a button.
@@ -269,6 +341,12 @@ public class JavaFX extends Application {
 		button.setMaxHeight(150);
 		button.setMinHeight(150);
 		button.setStyle("-fx-background-radius: 41px");
+
+		ScrollPane detailedScene = getDetailedScene(forecast, 0);
+
+		button.setOnAction(e -> {
+			applySlideTransition(detailedScene);
+		});
 
 		return button;
 	}
@@ -374,7 +452,7 @@ public class JavaFX extends Application {
 
 
 		double collapsedHeight = 0;
-		double expandedHeight = 7 * 35;
+		double expandedHeight = 245;
 
 		Rectangle clip = new Rectangle();
 		clip.setWidth(200);  // Adjust width based on layout
@@ -463,18 +541,21 @@ public class JavaFX extends Application {
 		mainScene = new Scene(mainVBox, 520, 780);
 
 
-		ScrollPane scrollOtherLocation = new ScrollPane(otherLocation(primaryStage, mainScene));
-		scrollOtherLocation.setFitToWidth(true); // Optional: Ensure the content fits the width
-		scrollOtherLocation.setFitToHeight(false); // Allow vertical scrolling
-
-		otherLocation = new Scene(scrollOtherLocation, 520, 780);
+		scrollPane2 = new ScrollPane(otherLocation(primaryStage, mainScene));
+		scrollPane2.setFitToWidth(true); // Optional: Ensure the content fits the width
+		scrollPane2.setFitToHeight(false); // Allow vertical scrolling
+		mainPane2 = new StackPane();
+		mainPane2.getChildren().add(scrollPane2);
+		otherLocation = new Scene(mainPane2, 520, 780);
 
 		// Wrap the VBox in a ScrollPane
-		ScrollPane scrollPaneChicago = new ScrollPane(ChicagoWeatherScene(primaryStage, mainScene));
-		scrollPaneChicago.setFitToWidth(true); // Optional: Ensure the content fits the width
-		scrollPaneChicago.setFitToHeight(false); // Allow vertical scrolling
+		scrollPane1 = new ScrollPane(ChicagoWeatherScene(primaryStage, mainScene));
+		scrollPane1.setFitToWidth(true); // Optional: Ensure the content fits the width
+		scrollPane1.setFitToHeight(false); // Allow vertical scrolling
+		mainPane1 = new StackPane();
+		mainPane1.getChildren().add(scrollPane1);
 
-		chicagoScene = new Scene(scrollPaneChicago, 520, 780);
+		chicagoScene = new Scene(mainPane1, 520, 780);
 
 		primaryStage.setScene(mainScene);
 		primaryStage.show();
