@@ -178,8 +178,8 @@ public class JavaFX extends Application {
 				alert.setContentText("""
 						Try again with different latitude and longitude, wrong information was given.
 						For Example:
-						New York City, Central Park (KNYC) 40.78°N 73.97°W
-						LOS ANGELES DOWNTOWN (FHMC1) 34.06°N 118.33°W
+						New York City, Central Park (KNYC) 40.78° -73.97°
+						LOS ANGELES DOWNTOWN (FHMC1) 34.06° -118.33°
 						""");
 				alert.showAndWait();
 				return;
@@ -209,7 +209,7 @@ public class JavaFX extends Application {
 			});
 		});
 
-		VBox vbox = new VBox(10, latitudeLabel, latitudeField, longitudeLabel, longitudeField, fetchButton,currentDay,unite,collapseInfo,bottomButtons3);
+		VBox vbox = new VBox(5, latitudeLabel, latitudeField, longitudeLabel, longitudeField, fetchButton,currentDay,unite,collapseInfo,bottomButtons3);
 		vbox.setPadding(new Insets(15));
 		return vbox;
 	}
@@ -389,7 +389,6 @@ public class JavaFX extends Application {
 	}
 
 
-
 	// The third box function //
 	// This function shows the weather information of the third day //
 	// The box is clickable. It's a button.
@@ -414,7 +413,6 @@ public class JavaFX extends Application {
 		button.setStyle("-fx-background-radius: 41px");
 		return button;
 	}
-
 
 
 	// The function that returns the VBox that contains additional information for the next //
@@ -506,12 +504,11 @@ public class JavaFX extends Application {
 	/////////////// End of Mohammad's Functions ////////////////////
 
 
-
+	//////////////// Mahdi Yahya Code Starts Here ////////////////
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		this.primaryStage = primaryStage;
 
-		//////////////// Mahdi Yahya Code Starts Here ////////////////
 		Image mainImage = new Image(new File("src/main/resources/main.gif").toURI().toString());
 		ImageView imageview = new ImageView(mainImage);
 		imageview.setFitWidth(400);
@@ -559,7 +556,6 @@ public class JavaFX extends Application {
 		scrollPane2.setFitToHeight(false); // Allow vertical scrolling
 		mainPane2 = new StackPane();
 		mainPane2.setStyle("-fx-background: LIGHTSKYBLUE");
-
 		mainPane2.getChildren().add(scrollPane2);
 		otherLocation = new Scene(mainPane2, 520, 882);
 
@@ -571,7 +567,6 @@ public class JavaFX extends Application {
 		mainPane1 = new StackPane();
 		mainPane1.setStyle("-fx-background: LIGHTSKYBLUE");
 		mainPane1.getChildren().add(scrollPane1);
-
 		chicagoScene = new Scene(mainPane1, 520, 882);
 
 		primaryStage.setScene(mainScene);
