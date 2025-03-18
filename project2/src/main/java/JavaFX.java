@@ -65,7 +65,7 @@ public class JavaFX extends Application {
 
 		HBox bottomButtons1 = new HBox(20, returnButton1, exitButton1);
 		bottomButtons1.setAlignment(Pos.BOTTOM_CENTER);
-		bottomButtons1.setPadding(new Insets(20, 0, 20, 0));
+		bottomButtons1.setPadding(new Insets(110, 0, 20, 0));
 		return bottomButtons1;
 	}
 
@@ -113,6 +113,9 @@ public class JavaFX extends Application {
 
 		bottomButtons2.setAlignment(Pos.BOTTOM_CENTER);
 		bottomButtons2.setPadding(new Insets(20, 0, 20, 0));
+		bottomButtons2.setManaged(false);
+		bottomButtons2.setLayoutX(270);
+		bottomButtons2.setLayoutY(870);
 
 		VBox vbox4 = new VBox(20,currentDay, unite, collapseInfo, bottomButtons2);
 
@@ -156,7 +159,10 @@ public class JavaFX extends Application {
 
 		HBox bottomButtons3 = new HBox(20, returnButton3, exitButton3);
 		bottomButtons3.setAlignment(Pos.BOTTOM_CENTER);
-		bottomButtons3.setPadding(new Insets(20, 0, 20, 0));
+		bottomButtons3.setManaged(false);
+		bottomButtons3.setLayoutX(270);
+		bottomButtons3.setLayoutY(870);
+
 
 		Button fetchButton = new Button("Get Forecast");
 		fetchButton.setOnAction(e -> {
@@ -166,7 +172,16 @@ public class JavaFX extends Application {
 
 			GridInformation gridInfo = MyWeatherAPI.getGridInfo(latitude, longitude);
 			if (gridInfo == null) {
-				System.out.println("Failed to retrieve grid information.");
+				Alert alert = new Alert(Alert.AlertType.INFORMATION);
+				alert.setTitle("Failed to retrieve grid information.");
+				alert.setHeaderText(null);
+				alert.setContentText("""
+						Try again with different latitude and longitude, wrong information was given.
+						For Example:
+						New York City, Central Park (KNYC) 40.78°N 73.97°W
+						LOS ANGELES DOWNTOWN (FHMC1) 34.06°N 118.33°W
+						""");
+				alert.showAndWait();
 				return;
 			}
 			ArrayList<Period> forecastLocation = WeatherAPI.getForecast(gridInfo.gridId, gridInfo.gridX, gridInfo.gridY);
@@ -526,8 +541,8 @@ public class JavaFX extends Application {
 		roundButton1.setOnAction(e -> {primaryStage.setScene(otherLocation);});
 
 		HBox buttons = new HBox(10, roundButton, roundButton1);
-		buttons.setAlignment(Pos.TOP_CENTER);
-		buttons.setPadding(new Insets(40, 0, 0, 0));
+		buttons.setAlignment(Pos.BOTTOM_CENTER);
+		buttons.setPadding(new Insets(100, 0, 0, 0));
 
 
 		VBox mainVBox = new VBox(15, imageview, mainTextVBox, buttons, mainSceneBottomButtons());
@@ -535,36 +550,29 @@ public class JavaFX extends Application {
 		mainVBox.setPadding(new Insets(0, 0, 0, 0));
 		mainVBox.setStyle("-fx-background-color: #33495f;");
 
-		mainScene = new Scene(mainVBox, 520, 780);
+		mainScene = new Scene(mainVBox, 520, 882);
 
 
-		scrollPane2 = new ScrollPane(otherLocation(primaryStage, mainScene));
+		VBox otherLocationVBox = otherLocation(primaryStage, mainScene);
+		scrollPane2 = new ScrollPane(otherLocationVBox);
 		scrollPane2.setFitToWidth(true); // Optional: Ensure the content fits the width
 		scrollPane2.setFitToHeight(false); // Allow vertical scrolling
 		mainPane2 = new StackPane();
+		mainPane2.setStyle("-fx-background: LIGHTSKYBLUE");
+
 		mainPane2.getChildren().add(scrollPane2);
-		otherLocation = new Scene(mainPane2, 520, 780);
+		otherLocation = new Scene(mainPane2, 520, 882);
 
-		// Wrap the VBox in a ScrollPane
-		scrollPane1 = new ScrollPane(ChicagoWeatherScene(primaryStage, mainScene));
-
-//		String imagePath = "src/main/resources/background.jpg";
-//		Image backgroundImage = new Image(imagePath);
-//
-//		BackgroundImage background = new BackgroundImage(backgroundImage,
-//				BackgroundRepeat.NO_REPEAT,
-//				BackgroundRepeat.NO_REPEAT,
-//				BackgroundPosition.CENTER,
-//				new BackgroundSize(100, 100, true, true, true, false));
-//
-//		scrollPane1.setBackground(new Background(background));
-
+		VBox chicagoVBox= ChicagoWeatherScene(primaryStage, mainScene);
+		scrollPane1 = new ScrollPane(chicagoVBox);
 		scrollPane1.setFitToWidth(true); // Optional: Ensure the content fits the width
 		scrollPane1.setFitToHeight(false); // Allow vertical scrolling
+		scrollPane1.setPannable(true);
 		mainPane1 = new StackPane();
+		mainPane1.setStyle("-fx-background: LIGHTSKYBLUE");
 		mainPane1.getChildren().add(scrollPane1);
 
-		chicagoScene = new Scene(mainPane1, 520, 780);
+		chicagoScene = new Scene(mainPane1, 520, 882);
 
 		primaryStage.setScene(mainScene);
 		primaryStage.show();
