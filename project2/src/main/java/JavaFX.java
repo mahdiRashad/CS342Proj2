@@ -5,9 +5,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -26,7 +24,6 @@ import javafx.scene.image.Image;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.text.TextAlignment;
-
 
 
 public class JavaFX extends Application {
@@ -321,7 +318,7 @@ public class JavaFX extends Application {
 			applySlideTransitionDown(scrollPane1, pane);
 		});
 
-        return pane;
+		return pane;
 	}
 
 
@@ -550,6 +547,18 @@ public class JavaFX extends Application {
 
 		// Wrap the VBox in a ScrollPane
 		scrollPane1 = new ScrollPane(ChicagoWeatherScene(primaryStage, mainScene));
+
+//		String imagePath = "src/main/resources/background.jpg";
+//		Image backgroundImage = new Image(imagePath);
+//
+//		BackgroundImage background = new BackgroundImage(backgroundImage,
+//				BackgroundRepeat.NO_REPEAT,
+//				BackgroundRepeat.NO_REPEAT,
+//				BackgroundPosition.CENTER,
+//				new BackgroundSize(100, 100, true, true, true, false));
+//
+//		scrollPane1.setBackground(new Background(background));
+
 		scrollPane1.setFitToWidth(true); // Optional: Ensure the content fits the width
 		scrollPane1.setFitToHeight(false); // Allow vertical scrolling
 		mainPane1 = new StackPane();
