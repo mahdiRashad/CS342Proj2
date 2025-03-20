@@ -1,0 +1,125 @@
+
+
+.vbox_background {
+    -fx-max-width: 460;
+    -fx-min-width: 460;
+    -fx-max-height: 200;
+    -fx-min-height: 150;
+    -fx-background-radius: 27px;
+    -fx-border-width: 27px;
+    -fx-alignment: center;
+    -fx-effect: none;
+    -fx-background-color: rgba(15, 32, 39, 0.7); /* 70% opacity */
+}
+.vbox_background .label {
+    -fx-text-fill: white; /* Ensures text is visible */
+}
+
+
+.close_button {
+    -fx-bakground-radius: 20;
+    -fx-min-width: 100;
+    -fx-min-height: 50;
+}
+
+
+
+.text_style{
+    -fx-alignment: left;
+    -fx-font-size: 12pt;
+    -fx-max-width: 400;
+    -fx-fill: #ead0d0;
+}
+
+.box_button{
+    -fx-background-image: url("vbox_info2.jpg");
+    -fx-background-size: cover;
+    -fx-background-position: center; /* Rounds the border */
+    -fx-fill-text: white;
+    -fx-max-height: 150;
+    -fx-min-height: 150;
+    -fx-max-width: 100;
+    -fx-min-width: 100;
+    -fx-background-radius: 41px;
+}
+
+.detailed_scene{
+    -fx-background-color: linear-gradient(to bottom, #ff00cc, #a1a1c1);
+}
+
+
+.desc-date-hbox {
+    -fx-border-color: white;
+    -fx-border-style: solid;
+    -fx-border-width: 0 0 1.8 0; /* Top, Right, Bottom, Left */
+    -fx-alignment: top-center;
+    -fx-max-height: 93;
+    -fx-min-height: 93;
+    -fx-padding: 70;
+}
+
+#fetch_button_box {
+    -fx-border-color: black;
+    -fx-border-style: solid;
+    -fx-border-width: 0 0 1 0;
+    -fx-alignment: center;
+    -fx-max-height: 50;
+    -fx-min-height: 50;
+}
+
+
+#labels {
+    -fx-max-width: 150;
+    -fx-min-width: 150;
+}
+
+
+#fetch_button {
+    -fx-background-color: linear-gradient(to bottom, #AA39E9, #C232CE, #CE577F);
+    -fx-border-radius: 30px;
+    -fx-background-radius: 30px;
+    -fx-font-size: 12pt;
+    -fx-max-width: 120;
+    -fx-min-width: 120;
+    -fx-max-height: 35;
+    -fx-min-height: 35;
+    -fx-text-fill: #e7eaef;
+    -fx-fill: #e2e4ec;
+}
+
+#collapse_button {
+    -fx-background-color: linear-gradient(to bottom, #AA39E9, #C232CE, #CE577F);
+    -fx-text-fill: #e7eaef;
+    -fx-fill: #e2e4ec;
+    -fx-font-size: 12pt;
+}
+
+
+
+
+#wind_text {
+    -fx-font-size: 10pt;
+    /*-fx-max-height: 26;*/
+    /*-fx-min-height: 26;*/
+    /*-fx-max-width: 1;*/
+    /*-fx-min-width: 1;*/
+}
+
+
+#wind_box {
+    -fx-max-width: 170;
+    -fx-min-width: 170;
+    -fx-max-height: 120;
+    -fx-min-height: 120;
+    -fx-background-radius: 27px;
+    -fx-border-width: 27px;
+    -fx-alignment: center;
+    -fx-effect: none;
+    -fx-background-color: rgba(15, 32, 39, 0.7); /* 70% opacity */
+}
+
+
+#main_color {
+    -fx-background-color: linear-gradient(to bottom, #ECE9E6, #FFFFFF);
+
+}
