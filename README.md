@@ -1,1 +1,3 @@
 Weather App (Java, JavaFX). A desktop client with a clean, user-friendly interface for looking up city weather and viewing current conditions (and basic forecasts). Built as a CS342 group project with Muhammad Kamil. I co-designed the UI and implemented core event handling, data retrieval, and error messaging to make it easy to use.
+<img width="541" height="823" alt="Screenshot 2025-08-29 at 10 17 02 PM" src="https://github.com/user-attachments/assets/7c598198-6d92-40d4-acd8-42f1c730f0f3" />
+<img width="522" height="897" alt="Screenshot 2025-08-29 at 10 17 19 PM" src="https://github.com/user-attachments/assets/03ee4448-fe9b-4b1a-9713-5b45e2ad623d" />
