@@ -1,4 +1,5 @@
 Weather App (Java, JavaFX)
+
 Developed a desktop client with a clean, user-friendly interface to display city weather and short forecasts. Built as a CS342 group project with Muhammad Kamil.
 
 My contributions: Co-designed the UI and implemented core event handling, data retrieval, and error messaging for a smooth user experience.
