@@ -5,11 +5,11 @@ My contributions: Co-designed the UI and implemented core event handling, data r
 
 Features:
 
-Daily Weather View: Shows current conditions plus short forecasts for the next two days (temperature, wind description, day/night breakdown).
+1-Daily Weather View: Shows current conditions plus short forecasts for the next two days (temperature, wind description, day/night breakdown).
 
-Location-Based View: Allows users to enter coordinates (longitude/latitude) to retrieve weather information for that location.
+2-Location-Based View: Allows users to enter coordinates (longitude/latitude) to retrieve weather information for that location.
 
-Navigation: Simple scene switching with options to return to the main menu or exit the app.
+3-Navigation: Simple scene switching with options to return to the main menu or exit the app.
 
 Wireframe of projects:
 
