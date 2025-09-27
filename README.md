@@ -13,6 +13,4 @@ This scene will enable the user to insert coordinates of a location in two text 
 
 Actual project:
 
-<img width="541" height="823" alt="Screenshot 2025-08-29 at 10 17 02 PM" src="https://github.com/user-attachments/assets/7c598198-6d92-40d4-acd8-42f1c730f0f3" />
-
-<img width="522" height="897" alt="Screenshot 2025-08-29 at 10 17 19 PM" src="https://github.com/user-attachments/assets/03ee4448-fe9b-4b1a-9713-5b45e2ad623d" />
+<img width="2039" height="1646" alt="image" src="https://github.com/user-attachments/assets/80401936-b675-4595-ae45-7b82f6cb6e8e" />
